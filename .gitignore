@@ -3,3 +3,18 @@ dist/
 .DS_Store
 .env
 .env.*
+.venv/
+# Secret credentials
+.env
+.env.*
+backend/.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# React
+node_modules/
+dist/
+.firebase/
