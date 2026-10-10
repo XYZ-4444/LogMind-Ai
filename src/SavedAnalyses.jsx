@@ -6,7 +6,7 @@ export default function SavedAnalyses() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8001/analyses")
+    fetch("https://logmind-ai-1s81.onrender.com/analyses")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch analyses");

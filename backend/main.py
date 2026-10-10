@@ -1,9 +1,22 @@
+from fastapi.middleware.cors import CORSMiddleware
 from database import supabase
 from ai_grouping import group_similar_errors
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="LogMind AI Backend")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+        "https://logmind-ai.web.app",
+        "https://logmind-ai.firebaseapp.com"
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"]
+)
 
 # Allow React frontend connections
 app.add_middleware(

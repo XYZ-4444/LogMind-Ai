@@ -37,7 +37,7 @@ const formData = new FormData();
 
 formData.append("file", file);
 
-fetch("http://127.0.0.1:8001/analyze", {
+fetch("https://logmind-ai-1s81.onrender.com/analyze", {
     method: "POST",
     body: formData
 })
