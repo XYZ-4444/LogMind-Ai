@@ -1,63 +1,13 @@
-import { useEffect, useState } from "react";
+import React from 'react';
 
 export default function SavedAnalyses() {
-  const [analyses, setAnalyses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("https://logmind-ai-1s81.onrender.com/analyses")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch analyses");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setAnalyses(data.analyses || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <p>Loading saved analyses...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
   return (
-    <div>
-      <h2>Saved Log Analyses</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Filename</th>
-            <th>Total Logs</th>
-            <th>Errors</th>
-            <th>Warnings</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {analyses.map((item) => (
-            <tr key={item.id}>
-              <td>{item.filename}</td>
-              <td>{item.total_logs}</td>
-              <td>{item.errors}</td>
-              <td>{item.warnings}</td>
-              <td>{item.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="info-banner" role="note">
+      <span><strong>Browser-only mode.</strong> Log parsing, rule-based incident grouping,
+        and demo recommendations run on this device. Data is stored in this browser
+        when storage is available. Cloud AI grouping, Supabase saves, and server-side
+        analysis are unavailable without a separately hosted backend. Nothing is sent
+        to Render. Clearing browser data removes local history.</span>
     </div>
   );
 }

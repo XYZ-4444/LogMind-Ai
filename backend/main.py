@@ -1,4 +1,3 @@
-from fastapi.middleware.cors import CORSMiddleware
 from database import supabase
 from ai_grouping import group_similar_errors
 from fastapi import FastAPI, UploadFile, File, HTTPException
@@ -7,24 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="LogMind AI Backend")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-        "https://logmind-ai.web.app",
-        "https://logmind-ai.firebaseapp.com"
-    ],
+    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
     allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"]
-)
-
-# Allow React frontend connections
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
@@ -39,6 +22,8 @@ def home():
 
 @app.get("/analyses")
 def get_analyses():
+    if supabase is None:
+        return {"status": "disabled", "total": 0, "analyses": []}
 
     response = (
         supabase.table("log_analyses")
@@ -103,10 +88,12 @@ async def analyze_logs(file: UploadFile = File(...)):
     incidents = group_similar_errors(logs)
 
     # STEP 3: Save the analysis summary to Supabase
-    supabase.table("log_analyses").insert(result).execute()
+    if supabase is not None:
+        supabase.table("log_analyses").insert(result).execute()
 
     # STEP 4: Return results with AI incident groups
     return {
         **result,
+        "saved_to_supabase": supabase is not None,
         "incidents": incidents
     }
